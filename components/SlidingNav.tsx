@@ -29,18 +29,7 @@ export function SlidingNav({ items }: { items: NavItem[] }) {
   const [bubble, setBubble] = useState<BubbleRect | null>(null)
   const [activeHref, setActiveHref] = useState<string>(items[0]?.href ?? '')
 
-  // CTA items aren't a bubble target — the gold pill is their own surface.
   function moveBubbleTo(href: string | null) {
-    const target = items.find((i) => i.href === href)
-    if (!href || target?.cta) {
-      // Snap back to the last *active* non-CTA href when hovering a CTA.
-      const fallback = items.find((i) => !i.cta && i.href === activeHref)
-      if (!fallback) {
-        setBubble(null)
-        return
-      }
-      href = fallback.href
-    }
     const el = href ? tabRefs.current[href] : null
     const nav = navRef.current
     if (!el || !nav) {
