@@ -243,12 +243,25 @@ function Message({
             </h3>
 
             {loading ? (
-              <div
-                className="mt-2 flex items-center gap-1.5 text-[11px] text-[var(--color-ai)]"
-                style={{ fontFamily: 'var(--font-mono)' }}
-              >
-                <Sparkles className="h-3 w-3" />
-                <span className="ai-dots">AI is analyzing</span>
+              <div className="mt-2 space-y-2">
+                <div
+                  className="flex items-center gap-1.5 text-[11px] text-[var(--color-ai)]"
+                  style={{ fontFamily: 'var(--font-mono)' }}
+                >
+                  <Sparkles className="h-3 w-3" />
+                  <span className="ai-dots">AI is analyzing</span>
+                </div>
+                {/* Skeleton lines fill the reserved space so the card looks
+                    "alive" during pending instead of collapsing top-aligned. */}
+                <div className="space-y-1.5 pt-1">
+                  <div className="h-1.5 w-full rounded-full bg-white/[0.06]" />
+                  <div className="h-1.5 w-[92%] rounded-full bg-white/[0.06]" />
+                  <div className="h-1.5 w-[78%] rounded-full bg-white/[0.06]" />
+                </div>
+                <div className="flex flex-wrap gap-1 pt-1.5">
+                  <div className="h-3 w-9 rounded-sm bg-[var(--color-ai)]/10" />
+                  <div className="h-3 w-12 rounded-sm bg-[var(--color-ai)]/10" />
+                </div>
               </div>
             ) : (
               <div key="done" className="ai-fade-in">
