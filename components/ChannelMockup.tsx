@@ -1,12 +1,6 @@
 'use client'
 
-import {
-  ExternalLink,
-  Sparkles,
-  FileText,
-  Play,
-  Brain,
-} from 'lucide-react'
+import { ExternalLink, Sparkles, Play, Brain } from 'lucide-react'
 import { useEffect, useState, type CSSProperties } from 'react'
 
 /**
@@ -63,25 +57,6 @@ export function ChannelMockup() {
           }}
         />
       </div>
-
-      <Message
-        name="Andrew Carnegie"
-        tint={{ bg: 'rgba(201,168,76,0.18)', text: '#e8c66a' }}
-        level={4}
-        time="09:14"
-        message="Best 40 min I've spent this month."
-        embed={{
-          type: 'Article',
-          domain: 'stanford-hai.edu',
-          title: 'The Future of AI Agents',
-          summary:
-            'A frank conversation on where multi-agent systems break, why verification beats generation, and how to ship reliable AI without losing weekends to eval debt.',
-          tags: ['AI', 'Research', 'Tech'],
-          stars: 4,
-          icon: FileText,
-        }}
-        brains={6}
-      />
 
       <PlainMessage
         name="Henry Ford"
