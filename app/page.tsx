@@ -76,33 +76,36 @@ function Hero() {
       <div className="relative mx-auto max-w-5xl px-6 pt-32 pb-12 text-center md:pt-44">
         <Reveal>
           <p
-            className="mb-6 inline-block rounded-full border border-white/10 bg-white/[0.02] px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-[var(--color-text-muted)] backdrop-blur"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.02] px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-[var(--color-text-muted)] backdrop-blur"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
-            <span className="text-[var(--color-accent)]">●</span> Now in private
-            beta · v{LATEST_VERSION}
+            <Sparkles className="h-3 w-3 text-[var(--color-ai)]" />
+            AI-native memory for private circles
           </p>
           <h1
-            className="text-balance text-6xl leading-[0.98] text-[var(--color-text-primary)] md:text-7xl lg:text-[88px]"
+            className="text-balance text-5xl leading-[0.98] text-[var(--color-text-primary)] md:text-7xl lg:text-[84px]"
             style={{
               fontFamily: 'var(--font-display)',
               fontWeight: 600,
               letterSpacing: '-0.04em',
             }}
           >
-            A collective brain
+            Your circle already thinks together.
             <br />
-            for your{' '}
-            <span
-              className="bg-gradient-to-br from-[#e8c66a] via-[var(--color-accent)] to-[#9b7d2e] bg-clip-text text-transparent"
-            >
-              circle
-            </span>
-            .
+            Now it{' '}
+            <span className="bg-gradient-to-br from-[#e8c66a] via-[var(--color-accent)] to-[#9b7d2e] bg-clip-text text-transparent">
+              remembers
+            </span>{' '}
+            together.
           </h1>
-          <p className="mx-auto mt-7 max-w-xl text-balance text-lg leading-relaxed text-[var(--color-text-muted)]">
-            A private desktop app where small groups of thinkers turn their
-            conversations into a living, AI-curated knowledge base.
+          <p className="mx-auto mt-7 max-w-2xl text-balance text-lg leading-relaxed text-[var(--color-text-muted)]">
+            An AI-native space where every article, video, and insight your
+            circle shares becomes{' '}
+            <span className="text-[var(--color-text-primary)]">permanent</span>,{' '}
+            <span className="text-[var(--color-text-primary)]">searchable</span>
+            , and{' '}
+            <span className="text-[var(--color-text-primary)]">ranked for you</span>
+            .
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
             <CTAButton href="#download" primary>
@@ -201,20 +204,39 @@ function Idea() {
             letterSpacing: '-0.03em',
           }}
         >
-          A mastermind works because minds align.
+          Signal without memory is just noise with extra steps.
         </h2>
-        <p className="mt-5 text-base leading-relaxed text-[var(--color-text-muted)]">
-          But the knowledge that emerges from those conversations — the article
-          someone brought up, the podcast they mentioned, the framework that
-          explained everything — usually slips through the cracks.
-        </p>
-        <p className="mt-3 text-base leading-relaxed text-[var(--color-text-primary)]">
-          Third Mind catches it.{' '}
-          <span className="text-[var(--color-accent)]">
-            The circle, augmented.
+
+        <p className="mt-7 text-base leading-relaxed text-[var(--color-text-muted)]">
+          Your circle already generates signal —{' '}
+          <span className="text-[var(--color-text-primary)]">
+            articles forwarded at midnight
           </span>
+          ,{' '}
+          <span className="text-[var(--color-text-primary)]">
+            podcasts debated on calls
+          </span>
+          ,{' '}
+          <span className="text-[var(--color-text-primary)]">
+            frameworks sketched on whiteboards
+          </span>
+          .
         </p>
-        <blockquote className="mt-12 border-l-2 border-[var(--color-accent)]/40 pl-6 text-left text-sm italic leading-relaxed text-[var(--color-text-muted)]">
+
+        <p className="mt-4 text-base leading-relaxed text-[var(--color-text-muted)]">
+          And every week, most of it disappears. Slack scrolls past it.
+          Bookmarks pile up. The one person who needed that article never sees
+          it.
+        </p>
+
+        <p className="mt-6 text-lg leading-relaxed text-[var(--color-text-primary)]">
+          Third Mind is the{' '}
+          <span className="text-[var(--color-accent)]">memory layer</span>. An
+          AI that listens to what your group shares, learns what each member
+          cares about, and surfaces the right knowledge at the right time.
+        </p>
+
+        <blockquote className="mx-auto mt-14 max-w-xl border-l-2 border-[var(--color-accent)]/40 pl-6 text-left text-sm italic leading-relaxed text-[var(--color-text-muted)]">
           &ldquo;No two minds ever come together without thereby creating a
           third, invisible, intangible force, which may be likened to a third
           mind.&rdquo;
@@ -235,39 +257,39 @@ function Idea() {
 const FEATURES = [
   {
     icon: Sparkles,
-    title: 'AI summaries that respect your time',
+    title: 'Drop a link. Get the brief.',
     body:
-      'Every shared link gets a 3-sentence summary, the 3 key points that actually matter, and tags from a curated vocabulary. Powered by Gemini 2.5 Flash.',
+      "3-sentence summary, key points, auto-tags. Generated before you've finished typing your comment.",
   },
   {
     icon: Star,
-    title: 'Personalized relevance',
+    title: 'Same feed. Different stars.',
     body:
-      'The AI scores every resource for every member based on their domain, bio, and interests. The same shared timeline — but your stars are yours alone.',
+      'The AI knows your domain. A paper on tokenization scores 5 stars for the ML engineer, 2 for the designer. Same channel — personal signal.',
   },
   {
     icon: FolderOpen,
-    title: 'Smart folders, auto-classified',
+    title: 'It files itself.',
     body:
-      "Resources file themselves into folders the moment they're shared. No tagging chore. No quarterly clean-up.",
+      'No folders to create. No tags to maintain. Resources organize on arrival, by the AI that read them.',
   },
   {
     icon: Trophy,
-    title: 'Levels, streaks & a leaderboard',
+    title: 'Contribution becomes culture.',
     body:
-      'Each contribution earns XP. Streaks reward daily participation. A team leaderboard creates gentle, motivating accountability.',
+      'XP for sharing, streaks for showing up, a leaderboard for the whole circle. Gentle accountability, no anxiety.',
   },
   {
     icon: Search,
-    title: 'Full-text search',
+    title: 'That podcast from three months ago? Found.',
     body:
-      'Across every resource ever shared. Find that podcast someone mentioned three months ago — Third Mind has it indexed.',
+      "Full-text search across everything your circle has ever shared. The summary is indexed, not just the title.",
   },
   {
     icon: AtSign,
-    title: '@Mentions with native notifications',
+    title: 'The right person, the moment it matters.',
     body:
-      'Tag a teammate in a message; they get a real macOS or Windows notification — even with the app closed.',
+      'Tag a teammate; they get a real macOS or Windows notification — even with the app closed.',
   },
 ] as const
 
@@ -290,11 +312,13 @@ function Features() {
               letterSpacing: '-0.03em',
             }}
           >
-            Curation as infrastructure.
+            The AI does the work.
+            <br />
+            You keep the circle.
           </h2>
           <p className="mt-5 text-balance text-base leading-relaxed text-[var(--color-text-muted)]">
-            Every feature exists to do one thing: turn what your circle reads
-            and watches into something you can come back to.
+            Every feature does one thing — turn what your circle reads and
+            watches into something you can come back to.
           </p>
         </div>
 
@@ -393,7 +417,9 @@ function HowItWorks() {
               letterSpacing: '-0.03em',
             }}
           >
-            A weekly rhythm. A daily channel.
+            One channel. One ritual.
+            <br />
+            Zero noise.
           </h2>
         </div>
 
@@ -403,24 +429,24 @@ function HowItWorks() {
               <Step
                 n="1"
                 icon={Brain}
-                title="Share what you find."
-                body="Paste a link, write a note. The AI generates a structured embed (summary, key points, tags) right in your message."
+                title="Share a link. The AI does the rest."
+                body="Paste a URL — the AI reads it, summarizes it in three sentences, lifts the key points, picks the tags. All before you've finished typing your note."
               />
             </Reveal>
             <Reveal delay={120}>
               <Step
                 n="2"
                 icon={Star}
-                title="Get ranked for you."
-                body="Every resource is scored against your domain and interests. The same channel — but each member's stars are personal."
+                title="Ranked for your brain, not the algorithm's."
+                body="Each resource is scored against your domain and your interests. Your circle sees the same channel; everyone sees their own stars."
               />
             </Reveal>
             <Reveal delay={240}>
               <Step
                 n="3"
                 icon={Mail}
-                title="Monday morning, a digest lands."
-                body="The 5 resources ranked highest for you that week, delivered as a clean email. Zero noise, signal only."
+                title="Monday morning: your top 5, zero noise."
+                body="The five resources the AI ranked highest for you that week, delivered as a clean email. Nothing else."
               />
             </Reveal>
           </div>
@@ -591,19 +617,19 @@ const FAQS = [
   },
   {
     q: 'How much does it cost?',
-    a: "Free during the private beta. The AI pipeline runs on Gemini 2.5 Flash, so operational costs are minimal (~$1.50/month for a 15-person team).",
+    a: "Free during the private beta. We'll share pricing before that changes — never as a surprise.",
   },
   {
-    q: "Why isn't the macOS build signed?",
-    a: "It will be — but the Apple Developer ID isn't free, and during the beta we'd rather invest that elsewhere. The release page walks you through bypassing Gatekeeper on first launch. Auto-updates work normally on Windows.",
+    q: 'First launch on macOS — what to expect.',
+    a: "macOS will ask you to approve the app on first launch. It's a 10-second click-through; the release page walks you through it.",
   },
   {
     q: 'Where is data stored?',
-    a: 'Supabase (Postgres + Storage + Auth), with row-level security so each team only sees its own resources. The desktop binary holds no secrets — all privileged work runs in Edge Functions.',
+    a: 'Supabase (Postgres + Storage + Auth), with row-level security so each team only sees its own resources. The desktop binary holds no secrets — all privileged work runs in Edge Functions on the server.',
   },
   {
-    q: 'Can I use it solo?',
-    a: 'Technically yes (a team of one). But it shines with 5–20 people who already talk to each other — a mastermind, a study group, a small founding team.',
+    q: 'Who is it for?',
+    a: 'Small groups who already think together — a mastermind, a research collective, a founding team, a reading club. Third Mind shines from 5 to 20 people. Solo works, but the magic is in the third mind.',
   },
 ] as const
 

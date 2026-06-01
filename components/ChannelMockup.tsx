@@ -1,3 +1,5 @@
+'use client'
+
 import {
   ExternalLink,
   Sparkles,
@@ -5,15 +7,37 @@ import {
   Play,
   Brain,
 } from 'lucide-react'
-import type { CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 
 /**
- * Larger hero preview: a mock-up of a Third Mind channel with three messages
- * (a video, an article, a plain note). Built to look like the desktop app's
- * channel — same MessageBubble + AiEmbed visuals — so the landing shows the
- * product in action, not just one isolated card.
+ * Hero mock-up: a Third Mind channel with three messages — including one that
+ * cycles between "AI is analyzing" and the resolved embed, so visitors see the
+ * AI moment itself, not just the result.
  */
 export function ChannelMockup() {
+  // Karpathy embed loops: pending (~2.4s) → done (~5.4s) → restart.
+  const [analyzing, setAnalyzing] = useState(true)
+
+  useEffect(() => {
+    let isPending = true
+    function tick() {
+      isPending = !isPending
+      setAnalyzing(isPending)
+    }
+    // Initial transition into 'done' first
+    const start = window.setTimeout(() => {
+      tick()
+      const interval = window.setInterval(tick, isPending ? 2400 : 5400)
+      ;(window as unknown as { __mockupInterval?: number }).__mockupInterval =
+        interval
+    }, 2400)
+    return () => {
+      window.clearTimeout(start)
+      const w = window as unknown as { __mockupInterval?: number }
+      if (w.__mockupInterval) window.clearInterval(w.__mockupInterval)
+    }
+  }, [])
+
   return (
     <div className="relative w-full">
       {/* Day separator */}
@@ -78,6 +102,7 @@ export function ChannelMockup() {
         }}
         brains={9}
         align="right"
+        loading={analyzing}
       />
 
       <PlainMessage
@@ -159,6 +184,7 @@ function Message({
   embed,
   brains,
   align = 'left',
+  loading = false,
 }: {
   name: string
   tint: Tint
@@ -177,6 +203,7 @@ function Message({
   }
   brains: number
   align?: 'left' | 'right'
+  loading?: boolean
 }) {
   const Icon = embed.icon
   const reverse = align === 'right'
@@ -200,16 +227,24 @@ function Message({
           </p>
         )}
 
-        <div className="mt-2 max-w-[420px] overflow-hidden rounded-xl border border-white/5 bg-[var(--color-background)]">
+        <div className="relative mt-2 max-w-[420px] overflow-hidden rounded-xl border border-white/5 bg-[var(--color-background)]">
+          {/* AI shimmer overlay while loading — same energy as the desktop app. */}
+          {loading && (
+            <div
+              aria-hidden
+              className="ai-shimmer pointer-events-none absolute inset-0 z-0"
+            />
+          )}
+
           <div
-            className="h-16 w-full"
+            className="relative z-10 h-16 w-full"
             style={{
               background:
                 embed.gradient ??
                 'linear-gradient(135deg, rgba(167,139,250,0.18), rgba(201,168,76,0.14))',
             }}
           />
-          <div className="p-3 text-left">
+          <div className="relative z-10 p-3 text-left">
             <div
               className="mb-1.5 flex items-center gap-1.5 text-[9px] uppercase tracking-wide text-[var(--color-text-muted)]"
               style={{ fontFamily: 'var(--font-mono)' }}
@@ -225,57 +260,68 @@ function Message({
             >
               {embed.title}
             </h3>
-            <div
-              className="mt-1.5 inline-flex items-center gap-1 rounded-full border border-[var(--color-ai)]/30 bg-[var(--color-ai)]/10 px-1.5 py-0.5 text-[8px] uppercase tracking-wide text-[var(--color-ai)]"
-              style={{ fontFamily: 'var(--font-mono)' }}
-            >
-              <Sparkles className="h-2.5 w-2.5" />
-              AI summary
-            </div>
-            <p className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-[var(--color-text-muted)]">
-              {embed.summary}
-            </p>
-            <div className="mt-2 flex flex-wrap gap-1">
-              {embed.tags.map((t) => (
-                <span
-                  key={t}
-                  className="rounded border border-[var(--color-ai)]/20 bg-[var(--color-ai)]/5 px-1.5 py-0.5 text-[8px] uppercase tracking-wide text-[var(--color-ai)]"
+
+            {loading ? (
+              <div
+                className="mt-2 flex items-center gap-1.5 text-[11px] text-[var(--color-ai)]"
+                style={{ fontFamily: 'var(--font-mono)' }}
+              >
+                <Sparkles className="h-3 w-3" />
+                <span className="ai-dots">AI is analyzing</span>
+              </div>
+            ) : (
+              <div key="done" className="ai-fade-in">
+                <div
+                  className="mt-1.5 inline-flex items-center gap-1 rounded-full border border-[var(--color-ai)]/30 bg-[var(--color-ai)]/10 px-1.5 py-0.5 text-[8px] uppercase tracking-wide text-[var(--color-ai)]"
                   style={{ fontFamily: 'var(--font-mono)' }}
                 >
-                  {t}
-                </span>
-              ))}
-            </div>
-            <div className="mt-2 flex items-center justify-between text-[9px]">
-              <div className="flex items-center gap-1.5">
-                <span className="text-[var(--color-accent)]">
-                  {'★'.repeat(embed.stars)}
-                  <span className="text-[var(--color-text-muted)]">
-                    {'★'.repeat(5 - embed.stars)}
-                  </span>
-                </span>
-                <span className="text-[var(--color-text-muted)]">
-                  Highly relevant
-                </span>
+                  <Sparkles className="h-2.5 w-2.5" />
+                  AI summary
+                </div>
+                <p className="mt-1.5 line-clamp-2 text-[11px] leading-relaxed text-[var(--color-text-muted)]">
+                  {embed.summary}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {embed.tags.map((t, i) => (
+                    <span
+                      key={t}
+                      className="ai-cascade rounded border border-[var(--color-ai)]/20 bg-[var(--color-ai)]/5 px-1.5 py-0.5 text-[8px] uppercase tracking-wide text-[var(--color-ai)]"
+                      style={{
+                        fontFamily: 'var(--font-mono)',
+                        animationDelay: `${0.4 + i * 0.12}s`,
+                      }}
+                    >
+                      {t}
+                    </span>
+                  ))}
+                </div>
+                <div className="mt-2 flex items-center justify-between text-[9px]">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-[var(--color-accent)]">
+                      {'★'.repeat(embed.stars)}
+                      <span className="text-[var(--color-text-muted)]">
+                        {'★'.repeat(5 - embed.stars)}
+                      </span>
+                    </span>
+                    <span className="text-[var(--color-text-muted)]">
+                      Highly relevant
+                    </span>
+                  </div>
+                  <ExternalLink className="h-3 w-3 text-[var(--color-text-muted)]" />
+                </div>
+                <div className="mx-1 mt-2 h-px bg-white/5" />
+                <div
+                  className={
+                    'mt-1.5 flex items-center gap-1 text-[var(--color-accent)] ' +
+                    (reverse ? 'justify-start' : 'justify-end')
+                  }
+                  style={{ fontFamily: 'var(--font-mono)' }}
+                >
+                  <Brain className="h-3.5 w-3.5" />
+                  <span className="text-[10px]">{brains}</span>
+                </div>
               </div>
-              <ExternalLink className="h-3 w-3 text-[var(--color-text-muted)]" />
-            </div>
-            <div
-              className={
-                'mx-1 mt-2 h-px ' +
-                'bg-white/5'
-              }
-            />
-            <div
-              className={
-                'mt-1.5 flex items-center gap-1 text-[var(--color-accent)] ' +
-                (reverse ? 'justify-start' : 'justify-end')
-              }
-              style={{ fontFamily: 'var(--font-mono)' }}
-            >
-              <Brain className="h-3.5 w-3.5" />
-              <span className="text-[10px]">{brains}</span>
-            </div>
+            )}
           </div>
         </div>
       </div>
