@@ -116,29 +116,30 @@
   animation: ai-cascade 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Brain "someone clicked" cue: matches the desktop app's brain-pulse.
-   Stays gray briefly, then runs an elastic pulse with the same shape as
-   the in-app reaction (scale up → overshoot → relax) and ends gold.
-   `forwards` keeps the icon on its final gold frame until the parent card
-   re-mounts (when the AI animation restarts the cycle). */
+/* Brain "someone clicked" cue, ported from the desktop app:
+   - 0.6s delay so the viewer registers the AI card first
+   - elastic pulse (matches the app's brain-pulse-kf shape)
+   - colour locks gold at the end and stays there until the parent re-mounts
+   - confetti + glow run alongside (separate animations below)
+*/
 @keyframes brain-click {
-  0%, 25% {
+  0%, 30% {
     transform: scale(1) rotate(0deg);
     color: var(--color-text-muted);
   }
-  40% {
+  42% {
     transform: scale(1.32) rotate(-6deg);
     color: var(--color-accent);
   }
-  55% {
+  54% {
     transform: scale(0.9) rotate(4deg);
     color: var(--color-accent);
   }
-  70% {
+  66% {
     transform: scale(1.08) rotate(-2deg);
     color: var(--color-accent);
   }
-  85%, 100% {
+  78%, 100% {
     transform: scale(1) rotate(0deg);
     color: var(--color-accent);
   }
@@ -147,4 +148,71 @@
   color: var(--color-text-muted);
   animation: brain-click 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
   transform-origin: center;
+}
+
+/* Confetti pieces flying out — same trajectory as the desktop app. */
+@keyframes brain-confetti {
+  0% {
+    transform: translate(-50%, -50%) scale(0.3) rotate(var(--rot-start));
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1) rotate(var(--rot-start));
+  }
+  45% {
+    transform: translate(
+        calc(-50% + var(--peak-x)),
+        calc(-50% + var(--peak-y))
+      )
+      scale(1)
+      rotate(calc((var(--rot-start) + var(--rot-end)) / 2));
+    opacity: 1;
+  }
+  100% {
+    transform: translate(
+        calc(-50% + var(--peak-x) + var(--fall-x)),
+        calc(-50% + var(--peak-y) + var(--fall-y))
+      )
+      scale(0.85)
+      rotate(var(--rot-end));
+    opacity: 0;
+  }
+}
+.brain-confetti {
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%) scale(0.3);
+  animation-name: brain-confetti;
+  animation-timing-function: cubic-bezier(0.34, 0.85, 0.5, 1);
+  animation-fill-mode: forwards;
+}
+
+/* Soft gold shockwave that expands behind the confetti. */
+@keyframes brain-glow {
+  0% {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+  }
+  15% {
+    opacity: 0.7;
+  }
+  100% {
+    width: 130px;
+    height: 130px;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+  }
+}
+.brain-glow {
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    rgba(201, 168, 76, 0.55) 0%,
+    rgba(201, 168, 76, 0.2) 45%,
+    transparent 72%
+  );
+  animation: brain-glow 0.7s ease-out forwards;
 }

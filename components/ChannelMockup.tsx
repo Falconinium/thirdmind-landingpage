@@ -10,25 +10,31 @@ import { useEffect, useState, type CSSProperties } from 'react'
  */
 export function ChannelMockup() {
   // Karpathy embed loops: pending (~2.4s) → done (~5.4s) → restart.
+  // `doneCycle` increments every time we land on 'done', so we can key the
+  // brain reaction wrapper to force a fresh confetti burst per cycle.
   const [analyzing, setAnalyzing] = useState(true)
+  const [doneCycle, setDoneCycle] = useState(0)
 
   useEffect(() => {
+    let cancelled = false
+    let timer = 0
     let isPending = true
-    function tick() {
-      isPending = !isPending
-      setAnalyzing(isPending)
+
+    function schedule(ms: number) {
+      timer = window.setTimeout(() => {
+        if (cancelled) return
+        isPending = !isPending
+        setAnalyzing(isPending)
+        if (!isPending) setDoneCycle((c) => c + 1)
+        // Pending lasts 2.4s; done lasts 5s so the viewer can read it.
+        schedule(isPending ? 2400 : 5000)
+      }, ms)
     }
-    // Initial transition into 'done' first
-    const start = window.setTimeout(() => {
-      tick()
-      const interval = window.setInterval(tick, isPending ? 2400 : 5400)
-      ;(window as unknown as { __mockupInterval?: number }).__mockupInterval =
-        interval
-    }, 2400)
+    // Initial wait, then flip to 'done' first.
+    schedule(2400)
     return () => {
-      window.clearTimeout(start)
-      const w = window as unknown as { __mockupInterval?: number }
-      if (w.__mockupInterval) window.clearInterval(w.__mockupInterval)
+      cancelled = true
+      window.clearTimeout(timer)
     }
   }, [])
 
@@ -92,6 +98,7 @@ export function ChannelMockup() {
           }}
           align="right"
           loading={analyzing}
+          burstKey={doneCycle}
         />
       </div>
     </div>
@@ -160,6 +167,7 @@ function Message({
   embed,
   align = 'left',
   loading = false,
+  burstKey = 0,
 }: {
   name: string
   tint: Tint
@@ -178,6 +186,7 @@ function Message({
   }
   align?: 'left' | 'right'
   loading?: boolean
+  burstKey?: number
 }) {
   const Icon = embed.icon
   const reverse = align === 'right'
@@ -308,7 +317,7 @@ function Message({
                   }
                   style={{ fontFamily: 'var(--font-mono)' }}
                 >
-                  <Brain className="brain-click h-3.5 w-3.5" />
+                  <BrainReaction burstKey={burstKey} />
                 </div>
               </div>
             )}
@@ -316,6 +325,100 @@ function Message({
         </div>
       </div>
     </div>
+  )
+}
+
+/**
+ * Brain reaction wrapper: a gold confetti burst of mini brains + a soft
+ * shockwave glow + the pulsing brain icon itself. Mirrors the desktop
+ * ReactionBar's BrainBurst component so the landing matches the app.
+ *
+ * The burst plays exactly once per mount — the parent uses `key={burstKey}`
+ * to remount this on every new "done" cycle, so we never get stacked or
+ * looping bursts.
+ */
+const CONFETTI_COLORS = [
+  'var(--color-accent)',
+  '#e8c66a',
+  '#9b7d2e',
+  'var(--color-ai)',
+  '#f5ead0',
+]
+
+function BrainReaction({ burstKey }: { burstKey: number }) {
+  // Particles are randomised per mount. We don't need SSR-stable values
+  // (the parent uses 'use client' and the bursts only render after mount).
+  const particles = Array.from({ length: 8 }, (_, i) => {
+    const angle =
+      -Math.PI / 2 + (Math.random() - 0.5) * Math.PI * 0.9
+    const power = 32 + Math.random() * 28
+    const peakX = Math.cos(angle) * power
+    const peakY = Math.sin(angle) * power
+    const fallY = 50 + Math.random() * 30
+    const fallX = peakX * 0.35 + (Math.random() - 0.5) * 12
+    const size = 8 + Math.random() * 6
+    const rotateStart = (Math.random() - 0.5) * 60
+    const rotateEnd = rotateStart + (Math.random() - 0.5) * 540
+    const delay = Math.random() * 80
+    const duration = 800 + Math.random() * 400
+    const color =
+      CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)]!
+    return {
+      i,
+      peakX,
+      peakY,
+      fallX,
+      fallY,
+      size,
+      rotateStart,
+      rotateEnd,
+      delay,
+      duration,
+      color,
+    }
+  })
+
+  return (
+    <span
+      key={burstKey}
+      className="relative inline-flex items-center"
+      style={{ animationDelay: '0.6s' }}
+    >
+      {/* Glow + confetti fire at the exact moment the brain begins its pulse
+          (the 30% mark of brain-click ≈ 0.48s). We use 0.5s as the delay. */}
+      <span
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-1/2 z-10 h-0 w-0"
+      >
+        <span
+          className="brain-glow absolute left-1/2 top-1/2"
+          style={{ animationDelay: '0.5s' }}
+        />
+        {particles.map((p) => (
+          <span
+            key={p.i}
+            className="brain-confetti absolute inline-flex"
+            style={
+              {
+                color: p.color,
+                '--peak-x': `${p.peakX}px`,
+                '--peak-y': `${p.peakY}px`,
+                '--fall-x': `${p.fallX}px`,
+                '--fall-y': `${p.fallY}px`,
+                '--rot-start': `${p.rotateStart}deg`,
+                '--rot-end': `${p.rotateEnd}deg`,
+                animationDelay: `${0.5 + p.delay / 1000}s`,
+                animationDuration: `${p.duration}ms`,
+              } as CSSProperties
+            }
+          >
+            <Brain style={{ width: p.size, height: p.size }} />
+          </span>
+        ))}
+      </span>
+
+      <Brain className="brain-click h-3.5 w-3.5" />
+    </span>
   )
 }
 
