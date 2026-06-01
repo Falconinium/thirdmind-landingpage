@@ -418,6 +418,14 @@ function BrainReaction({ burstKey }: { burstKey: number }) {
       </span>
 
       <Brain className="brain-click h-3.5 w-3.5" />
+      {/* "+1" pop synced with the brain pulse — same delay as the click peak. */}
+      <span
+        aria-hidden
+        className="brain-plus-one ml-1 text-[10px] font-semibold text-[var(--color-accent)]"
+        style={{ fontFamily: 'var(--font-mono)' }}
+      >
+        +1
+      </span>
     </span>
   )
 }
