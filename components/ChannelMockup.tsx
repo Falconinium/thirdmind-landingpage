@@ -81,7 +81,7 @@ export function ChannelMockup() {
       />
 
       <PlainMessage
-        name="Théo"
+        name="Henry Ford"
         tint={{ bg: 'rgba(167,139,250,0.18)', text: '#c0aafd' }}
         level={2}
         time="10:18"
