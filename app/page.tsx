@@ -10,13 +10,12 @@ import {
   Mail,
   Brain,
   ChevronDown,
-  Apple,
-  Monitor,
 } from 'lucide-react'
 import { ChannelPreview } from '@/components/ChannelPreview'
 import { DigestPreview } from '@/components/DigestPreview'
 import { SiteHeader } from '@/components/SiteHeader'
 import { Reveal } from '@/components/Reveal'
+import { AppleLogo, WindowsLogo } from '@/components/BrandIcons'
 import { LATEST_VERSION, releaseUrl, REPO_README } from '@/lib/release'
 
 export default function Page() {
@@ -507,13 +506,13 @@ function Download() {
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <DownloadCard
-            icon={Apple}
+            icon={AppleLogo}
             os="macOS"
             note="Apple Silicon or Intel · .dmg"
             href={url}
           />
           <DownloadCard
-            icon={Monitor}
+            icon={WindowsLogo}
             os="Windows"
             note="10 / 11 · .exe installer"
             href={url}
