@@ -83,28 +83,6 @@ export function ChannelMockup() {
         brains={6}
       />
 
-      <Message
-        name="Maxime"
-        tint={{ bg: 'rgba(63,182,122,0.18)', text: '#6dd6a0' }}
-        level={3}
-        time="10:02"
-        embed={{
-          type: 'Video',
-          domain: 'youtube.com',
-          title: 'Andrej Karpathy — Deep Dive on Tokenization',
-          summary:
-            'Two hours dissecting BPE, byte-level vs unicode tradeoffs, and why most LLM bugs trace back to how you split text.',
-          tags: ['AI', 'Research'],
-          stars: 5,
-          icon: Play,
-          gradient:
-            'linear-gradient(135deg, rgba(167,139,250,0.22), rgba(201,168,76,0.12))',
-        }}
-        brains={9}
-        align="right"
-        loading={analyzing}
-      />
-
       <PlainMessage
         name="Henry Ford"
         tint={{ bg: 'rgba(167,139,250,0.18)', text: '#c0aafd' }}
@@ -118,6 +96,30 @@ export function ChannelMockup() {
           </>
         }
       />
+
+      <div className="mt-4">
+        <Message
+          name="Maxime"
+          tint={{ bg: 'rgba(63,182,122,0.18)', text: '#6dd6a0' }}
+          level={3}
+          time="10:24"
+          embed={{
+            type: 'Video',
+            domain: 'youtube.com',
+            title: 'Andrej Karpathy — Deep Dive on Tokenization',
+            summary:
+              'Two hours dissecting BPE, byte-level vs unicode tradeoffs, and why most LLM bugs trace back to how you split text.',
+            tags: ['AI', 'Research'],
+            stars: 5,
+            icon: Play,
+            gradient:
+              'linear-gradient(135deg, rgba(167,139,250,0.22), rgba(201,168,76,0.12))',
+          }}
+          brains={9}
+          align="right"
+          loading={analyzing}
+        />
+      </div>
     </div>
   )
 }
@@ -227,8 +229,12 @@ function Message({
           </p>
         )}
 
-        <div className="relative mt-2 max-w-[420px] overflow-hidden rounded-xl border border-white/5 bg-[var(--color-background)]">
-          {/* AI shimmer overlay while loading — same energy as the desktop app. */}
+        <div
+          className="relative mt-2 max-w-[420px] overflow-hidden rounded-xl border border-white/5 bg-[var(--color-background)]"
+          // Reserved height so the card doesn't jump between the pending and
+          // resolved states. Tall enough for the full AI summary + tags.
+          style={{ minHeight: 244 }}
+        >
           {loading && (
             <div
               aria-hidden
