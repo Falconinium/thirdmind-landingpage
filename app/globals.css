@@ -116,27 +116,28 @@
   animation: ai-cascade 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
-/* Brain click loop: subtle gray, presses every ~3s, finishes gold to imply a
-   reaction landed, then resets. Pure visual cue — no count shown. */
+/* Brain click loop: gray → quick press → bounce gold → relax. Loop is short
+   so it fires twice within the resolved card's window. */
 @keyframes brain-click {
-  0%, 75%, 100% {
+  0%, 60%, 100% {
     transform: scale(1);
     color: var(--color-text-muted);
   }
-  82% {
-    transform: scale(0.78);
+  68% {
+    transform: scale(0.72);
     color: var(--color-text-muted);
   }
-  90% {
-    transform: scale(1.18);
+  78% {
+    transform: scale(1.22);
     color: var(--color-accent);
   }
-  96% {
+  88% {
     transform: scale(1);
     color: var(--color-accent);
   }
 }
 .brain-click {
-  animation: brain-click 3.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
+  color: var(--color-text-muted);
+  animation: brain-click 2.4s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
   transform-origin: center;
 }

@@ -308,7 +308,7 @@ function Message({
                   }
                   style={{ fontFamily: 'var(--font-mono)' }}
                 >
-                  <Brain className="h-3.5 w-3.5 brain-click text-[var(--color-text-muted)]" />
+                  <Brain className="brain-click h-3.5 w-3.5" />
                 </div>
               </div>
             )}
