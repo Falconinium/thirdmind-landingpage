@@ -11,7 +11,7 @@ import {
   Brain,
   ChevronDown,
 } from 'lucide-react'
-import { ChannelPreview } from '@/components/ChannelPreview'
+import { ChannelMockup } from '@/components/ChannelMockup'
 import { DigestPreview } from '@/components/DigestPreview'
 import { SiteHeader } from '@/components/SiteHeader'
 import { Reveal } from '@/components/Reveal'
@@ -123,18 +123,18 @@ function Hero() {
         </Reveal>
       </div>
 
-      {/* Preview floats below the hero, anchored on a mesh-gradient surface so
-          the embed reads as the product, not a decoration. */}
+      {/* Channel mockup floats below the hero, anchored on a mesh-gradient
+          surface so the conversation reads as the product, not a decoration. */}
       <Reveal delay={250}>
-        <div className="relative mx-auto -mt-2 max-w-5xl px-6 pb-24">
+        <div className="relative mx-auto -mt-2 max-w-3xl px-6 pb-24">
           <div
-            className="relative overflow-hidden rounded-3xl border border-white/10 p-6 shadow-[0_40px_120px_-40px_rgba(201,168,76,0.4)] md:p-10"
+            className="relative overflow-hidden rounded-3xl border border-white/10 p-6 shadow-[0_40px_120px_-40px_rgba(201,168,76,0.4)] md:p-8"
             style={{
               background:
                 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(167,139,250,0.10), transparent 60%), linear-gradient(180deg, rgba(24,24,28,0.7), rgba(10,10,13,0.9))',
             }}
           >
-            <ChannelPreview />
+            <ChannelMockup />
           </div>
         </div>
       </Reveal>
