@@ -412,7 +412,7 @@ function BrainReaction({ burstKey }: { burstKey: number }) {
               } as CSSProperties
             }
           >
-            <Brain style={{ width: p.size, height: p.size }} />
+            <Brain size={p.size} strokeWidth={2} />
           </span>
         ))}
       </span>
