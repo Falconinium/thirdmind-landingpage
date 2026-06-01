@@ -186,7 +186,7 @@ function CTAButton({
 
 function Idea() {
   return (
-    <section className="border-t border-white/5 bg-[var(--color-surface)]/30">
+    <section>
       <Reveal className="mx-auto max-w-3xl px-6 py-32 text-center">
         <p
           className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[var(--color-accent)]"
@@ -274,7 +274,7 @@ const FEATURES = [
 
 function Features() {
   return (
-    <section id="features" className="relative border-t border-white/5">
+    <section id="features" className="relative">
       <div className="mx-auto max-w-6xl px-6 py-32">
         <div className="mx-auto max-w-2xl text-center">
           <p
@@ -376,7 +376,7 @@ function HowItWorks() {
   return (
     <section
       id="how"
-      className="relative overflow-hidden border-t border-white/5 bg-[var(--color-surface)]/30"
+      className="relative overflow-hidden"
     >
       <div className="mx-auto max-w-6xl px-6 py-24">
         <div className="mx-auto max-w-2xl text-center">
@@ -481,7 +481,7 @@ function Step({
 function Download() {
   const url = releaseUrl()
   return (
-    <section id="download" className="border-t border-white/5">
+    <section id="download">
       <Reveal className="mx-auto max-w-3xl px-6 py-32 text-center">
         <p
           className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[var(--color-accent)]"
@@ -612,7 +612,7 @@ function FAQ() {
   return (
     <section
       id="faq"
-      className="border-t border-white/5 bg-[var(--color-surface)]/30"
+      className=""
     >
       <div className="mx-auto max-w-3xl px-6 py-32">
         <div className="text-center">
