@@ -48,6 +48,16 @@
   animation: reveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Slow drift used by the hero violet orb so it never feels static. */
+@keyframes floatOrb {
+  0%, 100% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(-20px, 30px) scale(1.05);
+  }
+}
+
 /* AI shimmer — kept for hero preview glow if needed. */
 @keyframes ai-shimmer {
   0% { background-position: -200% 0; }

@@ -15,6 +15,8 @@ import {
 } from 'lucide-react'
 import { ChannelPreview } from '@/components/ChannelPreview'
 import { DigestPreview } from '@/components/DigestPreview'
+import { SiteHeader } from '@/components/SiteHeader'
+import { Reveal } from '@/components/Reveal'
 import { LATEST_VERSION, releaseUrl, REPO_README } from '@/lib/release'
 
 export default function Page() {
@@ -34,59 +36,6 @@ export default function Page() {
   )
 }
 
-/* ───────────────────────────── Header ───────────────────────────── */
-
-function SiteHeader() {
-  return (
-    <header
-      className="sticky top-0 z-40 border-b border-white/5"
-      style={{
-        background:
-          'linear-gradient(180deg, rgba(10,10,13,0.92) 0%, rgba(10,10,13,0.7) 100%)',
-        backdropFilter: 'saturate(140%) blur(10px)',
-      }}
-    >
-      <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-2">
-          <div
-            className="flex h-7 w-7 items-center justify-center rounded-md bg-[var(--color-accent)] text-sm text-black"
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 700 }}
-          >
-            ◆
-          </div>
-          <span
-            className="text-sm text-[var(--color-text-primary)]"
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
-          >
-            Third Mind
-          </span>
-        </Link>
-        <nav
-          className="hidden items-center gap-6 text-xs uppercase tracking-wide text-[var(--color-text-muted)] md:flex"
-          style={{ fontFamily: 'var(--font-mono)' }}
-        >
-          <Link href="#features" className="hover:text-[var(--color-text-primary)]">
-            Features
-          </Link>
-          <Link href="#how" className="hover:text-[var(--color-text-primary)]">
-            How it works
-          </Link>
-          <Link href="#faq" className="hover:text-[var(--color-text-primary)]">
-            FAQ
-          </Link>
-        </nav>
-        <Link
-          href="#download"
-          className="rounded-full bg-[var(--color-accent)] px-3.5 py-1.5 text-xs font-semibold text-black transition-colors hover:bg-[var(--color-accent-hover)]"
-          style={{ fontFamily: 'var(--font-mono)' }}
-        >
-          Download
-        </Link>
-      </div>
-    </header>
-  )
-}
-
 /* ───────────────────────────── Hero ───────────────────────────── */
 
 function Hero() {
@@ -99,8 +48,16 @@ function Hero() {
             'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.10), transparent 70%)',
         }}
       />
-      <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 pt-24 pb-20 md:grid-cols-2 md:pt-32 md:pb-28">
-        <div className="animate-reveal">
+      <div
+        className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full opacity-60 blur-3xl"
+        style={{
+          background:
+            'radial-gradient(circle, rgba(167,139,250,0.18), transparent 70%)',
+          animation: 'floatOrb 18s ease-in-out infinite',
+        }}
+      />
+      <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 pt-32 pb-20 md:grid-cols-2 md:pt-40 md:pb-28">
+        <Reveal>
           <p
             className="mb-5 text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]"
             style={{ fontFamily: 'var(--font-mono)' }}
@@ -144,10 +101,10 @@ function Hero() {
           >
             macOS · Windows · v{LATEST_VERSION} · Invitation-only
           </p>
-        </div>
-        <div className="relative">
+        </Reveal>
+        <Reveal delay={200} className="relative">
           <ChannelPreview />
-        </div>
+        </Reveal>
       </div>
     </section>
   )
@@ -158,7 +115,7 @@ function Hero() {
 function Idea() {
   return (
     <section className="border-t border-white/5 bg-[var(--color-surface)]/30">
-      <div className="mx-auto max-w-3xl px-6 py-24 text-center">
+      <Reveal className="mx-auto max-w-3xl px-6 py-24 text-center">
         <p
           className="mb-3 text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]"
           style={{ fontFamily: 'var(--font-mono)' }}
@@ -193,7 +150,7 @@ function Idea() {
             — Napoleon Hill, <i>Think and Grow Rich</i>
           </footer>
         </blockquote>
-      </div>
+      </Reveal>
     </section>
   )
 }
@@ -263,35 +220,37 @@ function Features() {
         </div>
 
         <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f) => {
+          {FEATURES.map((f, i) => {
             const Icon = f.icon
             return (
-              <div
-                key={f.title}
-                className="rounded-2xl border border-white/5 bg-white/[0.02] p-6 transition-colors hover:border-white/15"
-              >
-                <div
-                  className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl"
-                  style={{
-                    background:
-                      'color-mix(in srgb, var(--color-accent) 14%, transparent)',
-                  }}
-                >
-                  <Icon
-                    className="h-5 w-5"
-                    style={{ color: 'var(--color-accent)' }}
-                  />
+              <Reveal key={f.title} delay={i * 70}>
+                <div className="group h-full rounded-2xl border border-white/5 bg-white/[0.02] p-6 transition-all hover:-translate-y-0.5 hover:border-[var(--color-accent)]/30 hover:bg-white/[0.04]">
+                  <div
+                    className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
+                    style={{
+                      background:
+                        'color-mix(in srgb, var(--color-accent) 14%, transparent)',
+                    }}
+                  >
+                    <Icon
+                      className="h-5 w-5"
+                      style={{ color: 'var(--color-accent)' }}
+                    />
+                  </div>
+                  <h3
+                    className="text-base text-[var(--color-text-primary)]"
+                    style={{
+                      fontFamily: 'var(--font-display)',
+                      fontWeight: 600,
+                    }}
+                  >
+                    {f.title}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-muted)]">
+                    {f.body}
+                  </p>
                 </div>
-                <h3
-                  className="text-base text-[var(--color-text-primary)]"
-                  style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
-                >
-                  {f.title}
-                </h3>
-                <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-muted)]">
-                  {f.body}
-                </p>
-              </div>
+              </Reveal>
             )
           })}
         </div>
@@ -326,28 +285,34 @@ function HowItWorks() {
 
         <div className="mt-14 grid grid-cols-1 items-center gap-12 md:grid-cols-2">
           <div className="order-2 space-y-8 md:order-1">
-            <Step
-              n="1"
-              icon={Brain}
-              title="Share what you find."
-              body="Paste a link, write a note. The AI generates a structured embed (summary, key points, tags) right in your message."
-            />
-            <Step
-              n="2"
-              icon={Star}
-              title="Get ranked for you."
-              body="Every resource is scored against your domain and interests. The same channel — but each member's stars are personal."
-            />
-            <Step
-              n="3"
-              icon={Mail}
-              title="Monday morning, a digest lands."
-              body="The 5 resources ranked highest for you that week, delivered as a clean email. Zero noise, signal only."
-            />
+            <Reveal>
+              <Step
+                n="1"
+                icon={Brain}
+                title="Share what you find."
+                body="Paste a link, write a note. The AI generates a structured embed (summary, key points, tags) right in your message."
+              />
+            </Reveal>
+            <Reveal delay={120}>
+              <Step
+                n="2"
+                icon={Star}
+                title="Get ranked for you."
+                body="Every resource is scored against your domain and interests. The same channel — but each member's stars are personal."
+              />
+            </Reveal>
+            <Reveal delay={240}>
+              <Step
+                n="3"
+                icon={Mail}
+                title="Monday morning, a digest lands."
+                body="The 5 resources ranked highest for you that week, delivered as a clean email. Zero noise, signal only."
+              />
+            </Reveal>
           </div>
-          <div className="order-1 md:order-2">
+          <Reveal delay={200} className="order-1 md:order-2">
             <DigestPreview />
-          </div>
+          </Reveal>
         </div>
       </div>
     </section>
@@ -402,7 +367,7 @@ function Download() {
   const url = releaseUrl()
   return (
     <section id="download" className="border-t border-white/5">
-      <div className="mx-auto max-w-3xl px-6 py-24 text-center">
+      <Reveal className="mx-auto max-w-3xl px-6 py-24 text-center">
         <p
           className="mb-3 text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]"
           style={{ fontFamily: 'var(--font-mono)' }}
@@ -445,7 +410,7 @@ function Download() {
           <ArrowRight className="h-4 w-4" />
           See full release notes on GitHub
         </a>
-      </div>
+      </Reveal>
     </section>
   )
 }
@@ -546,22 +511,24 @@ function FAQ() {
           </h2>
         </div>
         <div className="mt-12 space-y-3">
-          {FAQS.map((f) => (
-            <details
-              key={f.q}
-              className="group rounded-xl border border-white/5 bg-white/[0.02] open:border-white/15 open:bg-white/[0.04]"
-            >
-              <summary
-                className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left text-sm text-[var(--color-text-primary)]"
-                style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
-              >
-                {f.q}
-                <ChevronDown className="h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition-transform group-open:rotate-180" />
-              </summary>
-              <p className="border-t border-white/5 px-5 py-4 text-sm leading-relaxed text-[var(--color-text-muted)]">
-                {f.a}
-              </p>
-            </details>
+          {FAQS.map((f, i) => (
+            <Reveal key={f.q} delay={i * 60}>
+              <details className="group rounded-xl border border-white/5 bg-white/[0.02] transition-colors open:border-white/15 open:bg-white/[0.04]">
+                <summary
+                  className="flex cursor-pointer list-none items-center justify-between gap-4 px-5 py-4 text-left text-sm text-[var(--color-text-primary)]"
+                  style={{
+                    fontFamily: 'var(--font-display)',
+                    fontWeight: 600,
+                  }}
+                >
+                  {f.q}
+                  <ChevronDown className="h-4 w-4 shrink-0 text-[var(--color-text-muted)] transition-transform group-open:rotate-180" />
+                </summary>
+                <p className="border-t border-white/5 px-5 py-4 text-sm leading-relaxed text-[var(--color-text-muted)]">
+                  {f.a}
+                </p>
+              </details>
+            </Reveal>
           ))}
         </div>
       </div>
