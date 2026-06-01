@@ -53,66 +53,132 @@ export default function Page() {
 function Hero() {
   return (
     <section className="relative overflow-hidden">
-      {/* Violet orb keeps drifting; gold halo lives at the page root now. */}
+      {/* Drifting violet orb in the background. */}
       <div
-        className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full opacity-60 blur-3xl"
+        className="pointer-events-none absolute -right-32 top-40 h-96 w-96 rounded-full opacity-50 blur-3xl"
         style={{
           background:
-            'radial-gradient(circle, rgba(167,139,250,0.18), transparent 70%)',
+            'radial-gradient(circle, rgba(167,139,250,0.22), transparent 70%)',
           animation: 'floatOrb 18s ease-in-out infinite',
         }}
       />
-      <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-6 pt-32 pb-20 md:grid-cols-2 md:pt-40 md:pb-28">
+      <div
+        className="pointer-events-none absolute -left-32 top-96 h-80 w-80 rounded-full opacity-40 blur-3xl"
+        style={{
+          background:
+            'radial-gradient(circle, rgba(201,168,76,0.22), transparent 70%)',
+          animation: 'floatOrb 22s ease-in-out infinite reverse',
+        }}
+      />
+
+      {/* Centred hero: huge headline, single subhead, two CTAs, preview below.
+          Inspired by useorigin's cinema-style hero — typography does the work,
+          not layout. */}
+      <div className="relative mx-auto max-w-5xl px-6 pt-32 pb-12 text-center md:pt-44">
         <Reveal>
           <p
-            className="mb-5 text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]"
+            className="mb-6 inline-block rounded-full border border-white/10 bg-white/[0.02] px-3 py-1 text-[10px] uppercase tracking-[0.22em] text-[var(--color-text-muted)] backdrop-blur"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
-            For private circles of thinkers
+            <span className="text-[var(--color-accent)]">●</span> Now in private
+            beta · v{LATEST_VERSION}
           </p>
           <h1
-            className="text-5xl leading-[1.05] text-[var(--color-text-primary)] md:text-6xl"
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
+            className="text-balance text-6xl leading-[0.98] text-[var(--color-text-primary)] md:text-7xl lg:text-[88px]"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 600,
+              letterSpacing: '-0.04em',
+            }}
           >
             A collective brain
             <br />
             for your{' '}
-            <span className="text-[var(--color-accent)]">circle</span>.
-          </h1>
-          <p className="mt-6 max-w-md text-base leading-relaxed text-[var(--color-text-muted)]">
-            Third Mind is a private desktop app where small groups of thinkers
-            turn their conversations into a living, AI-curated knowledge base.
-            Share a link — the third mind summarizes it, classifies it, and
-            ranks it for each member.
-          </p>
-          <div className="mt-8 flex flex-wrap items-center gap-3">
-            <Link
-              href="#download"
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-[var(--color-accent-hover)]"
+            <span
+              className="bg-gradient-to-br from-[#e8c66a] via-[var(--color-accent)] to-[#9b7d2e] bg-clip-text text-transparent"
             >
+              circle
+            </span>
+            .
+          </h1>
+          <p className="mx-auto mt-7 max-w-xl text-balance text-lg leading-relaxed text-[var(--color-text-muted)]">
+            A private desktop app where small groups of thinkers turn their
+            conversations into a living, AI-curated knowledge base.
+          </p>
+          <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
+            <CTAButton href="#download" primary>
               Download for free
               <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="#how"
-              className="inline-flex items-center gap-1.5 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]"
-            >
+            </CTAButton>
+            <CTAButton href="#how">
               See how it works
-              <ChevronDown className="h-3.5 w-3.5" />
-            </Link>
+              <ChevronDown className="h-4 w-4" />
+            </CTAButton>
           </div>
           <p
-            className="mt-6 text-[10px] uppercase tracking-wide text-[var(--color-text-muted)]"
+            className="mt-7 text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-muted)]"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
-            macOS · Windows · v{LATEST_VERSION} · Invitation-only
+            macOS · Windows · Invitation-only
           </p>
         </Reveal>
-        <Reveal delay={200} className="relative">
-          <ChannelPreview />
-        </Reveal>
       </div>
+
+      {/* Preview floats below the hero, anchored on a mesh-gradient surface so
+          the embed reads as the product, not a decoration. */}
+      <Reveal delay={250}>
+        <div className="relative mx-auto -mt-2 max-w-5xl px-6 pb-24">
+          <div
+            className="relative overflow-hidden rounded-3xl border border-white/10 p-6 shadow-[0_40px_120px_-40px_rgba(201,168,76,0.4)] md:p-10"
+            style={{
+              background:
+                'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(167,139,250,0.10), transparent 60%), linear-gradient(180deg, rgba(24,24,28,0.7), rgba(10,10,13,0.9))',
+            }}
+          >
+            <ChannelPreview />
+          </div>
+        </div>
+      </Reveal>
     </section>
+  )
+}
+
+/* ───────────────────────────── CTA Button ───────────────────────────── */
+
+function CTAButton({
+  href,
+  primary,
+  children,
+}: {
+  href: string
+  primary?: boolean
+  children: React.ReactNode
+}) {
+  if (primary) {
+    return (
+      <Link
+        href={href}
+        className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-[var(--color-accent)] px-5 py-2.5 text-sm font-semibold text-black transition-all hover:scale-[1.02]"
+      >
+        <span
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+          style={{
+            background:
+              'radial-gradient(circle at 50% 0%, rgba(255,255,255,0.6), transparent 70%)',
+          }}
+        />
+        <span className="relative inline-flex items-center gap-2">{children}</span>
+      </Link>
+    )
+  }
+  return (
+    <Link
+      href={href}
+      className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-5 py-2.5 text-sm text-[var(--color-text-primary)] backdrop-blur transition-colors hover:border-white/25 hover:bg-white/[0.06]"
+    >
+      {children}
+    </Link>
   )
 }
 
@@ -121,16 +187,20 @@ function Hero() {
 function Idea() {
   return (
     <section className="border-t border-white/5 bg-[var(--color-surface)]/30">
-      <Reveal className="mx-auto max-w-3xl px-6 py-24 text-center">
+      <Reveal className="mx-auto max-w-3xl px-6 py-32 text-center">
         <p
-          className="mb-3 text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]"
+          className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[var(--color-accent)]"
           style={{ fontFamily: 'var(--font-mono)' }}
         >
           The idea
         </p>
         <h2
-          className="text-3xl leading-tight text-[var(--color-text-primary)] md:text-4xl"
-          style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
+          className="text-balance text-4xl leading-[1.05] text-[var(--color-text-primary)] md:text-5xl lg:text-6xl"
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontWeight: 600,
+            letterSpacing: '-0.03em',
+          }}
         >
           A mastermind works because minds align.
         </h2>
@@ -204,61 +274,37 @@ const FEATURES = [
 
 function Features() {
   return (
-    <section id="features" className="border-t border-white/5">
-      <div className="mx-auto max-w-6xl px-6 py-24">
+    <section id="features" className="relative border-t border-white/5">
+      <div className="mx-auto max-w-6xl px-6 py-32">
         <div className="mx-auto max-w-2xl text-center">
           <p
-            className="mb-3 text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]"
+            className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[var(--color-accent)]"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             Headline features
           </p>
           <h2
-            className="text-3xl leading-tight text-[var(--color-text-primary)] md:text-4xl"
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
+            className="text-balance text-4xl leading-[1.05] text-[var(--color-text-primary)] md:text-5xl lg:text-6xl"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 600,
+              letterSpacing: '-0.03em',
+            }}
           >
             Curation as infrastructure.
           </h2>
-          <p className="mt-4 text-base leading-relaxed text-[var(--color-text-muted)]">
+          <p className="mt-5 text-balance text-base leading-relaxed text-[var(--color-text-muted)]">
             Every feature exists to do one thing: turn what your circle reads
             and watches into something you can come back to.
           </p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {FEATURES.map((f, i) => {
-            const Icon = f.icon
-            return (
-              <Reveal key={f.title} delay={i * 70}>
-                <div className="group h-full rounded-2xl border border-white/5 bg-white/[0.02] p-6 transition-all hover:-translate-y-0.5 hover:border-[var(--color-accent)]/30 hover:bg-white/[0.04]">
-                  <div
-                    className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
-                    style={{
-                      background:
-                        'color-mix(in srgb, var(--color-accent) 14%, transparent)',
-                    }}
-                  >
-                    <Icon
-                      className="h-5 w-5"
-                      style={{ color: 'var(--color-accent)' }}
-                    />
-                  </div>
-                  <h3
-                    className="text-base text-[var(--color-text-primary)]"
-                    style={{
-                      fontFamily: 'var(--font-display)',
-                      fontWeight: 600,
-                    }}
-                  >
-                    {f.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-muted)]">
-                    {f.body}
-                  </p>
-                </div>
-              </Reveal>
-            )
-          })}
+        <div className="mt-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {FEATURES.map((f, i) => (
+            <Reveal key={f.title} delay={i * 70}>
+              <FeatureCard icon={f.icon} title={f.title} body={f.body} />
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>
@@ -266,6 +312,65 @@ function Features() {
 }
 
 /* ───────────────────────────── How it works ───────────────────────────── */
+
+function FeatureCard({
+  icon: Icon,
+  title,
+  body,
+}: {
+  icon: React.ComponentType<{
+    className?: string
+    style?: React.CSSProperties
+  }>
+  title: string
+  body: string
+}) {
+  return (
+    <div
+      className="group relative h-full overflow-hidden rounded-2xl border border-white/5 p-7 transition-all hover:-translate-y-1 hover:border-[var(--color-accent)]/30"
+      style={{
+        background:
+          'linear-gradient(180deg, rgba(24,24,28,0.7) 0%, rgba(10,10,13,0.85) 100%)',
+      }}
+    >
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -right-16 -top-16 h-48 w-48 rounded-full opacity-0 blur-3xl transition-opacity duration-500 group-hover:opacity-100"
+        style={{
+          background:
+            'radial-gradient(circle, rgba(201,168,76,0.35), transparent 70%)',
+        }}
+      />
+      <div className="relative">
+        <div
+          className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl transition-transform group-hover:scale-110"
+          style={{
+            background:
+              'color-mix(in srgb, var(--color-accent) 14%, transparent)',
+          }}
+        >
+          <Icon
+            className="h-5 w-5"
+            style={{ color: 'var(--color-accent)' }}
+          />
+        </div>
+        <h3
+          className="text-lg text-[var(--color-text-primary)]"
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontWeight: 600,
+            letterSpacing: '-0.01em',
+          }}
+        >
+          {title}
+        </h3>
+        <p className="mt-2 text-sm leading-relaxed text-[var(--color-text-muted)]">
+          {body}
+        </p>
+      </div>
+    </div>
+  )
+}
 
 function HowItWorks() {
   return (
@@ -276,14 +381,18 @@ function HowItWorks() {
       <div className="mx-auto max-w-6xl px-6 py-24">
         <div className="mx-auto max-w-2xl text-center">
           <p
-            className="mb-3 text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]"
+            className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[var(--color-accent)]"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             How it works
           </p>
           <h2
-            className="text-3xl leading-tight text-[var(--color-text-primary)] md:text-4xl"
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
+            className="text-balance text-4xl leading-[1.05] text-[var(--color-text-primary)] md:text-5xl lg:text-6xl"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 600,
+              letterSpacing: '-0.03em',
+            }}
           >
             A weekly rhythm. A daily channel.
           </h2>
@@ -373,16 +482,20 @@ function Download() {
   const url = releaseUrl()
   return (
     <section id="download" className="border-t border-white/5">
-      <Reveal className="mx-auto max-w-3xl px-6 py-24 text-center">
+      <Reveal className="mx-auto max-w-3xl px-6 py-32 text-center">
         <p
-          className="mb-3 text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]"
+          className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[var(--color-accent)]"
           style={{ fontFamily: 'var(--font-mono)' }}
         >
           Download · v{LATEST_VERSION}
         </p>
         <h2
-          className="text-3xl leading-tight text-[var(--color-text-primary)] md:text-4xl"
-          style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
+          className="text-balance text-4xl leading-[1.05] text-[var(--color-text-primary)] md:text-5xl lg:text-6xl"
+          style={{
+            fontFamily: 'var(--font-display)',
+            fontWeight: 600,
+            letterSpacing: '-0.03em',
+          }}
         >
           Get the desktop app.
         </h2>
@@ -501,17 +614,21 @@ function FAQ() {
       id="faq"
       className="border-t border-white/5 bg-[var(--color-surface)]/30"
     >
-      <div className="mx-auto max-w-3xl px-6 py-24">
+      <div className="mx-auto max-w-3xl px-6 py-32">
         <div className="text-center">
           <p
-            className="mb-3 text-[10px] uppercase tracking-[0.2em] text-[var(--color-accent)]"
+            className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[var(--color-accent)]"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
             FAQ
           </p>
           <h2
-            className="text-3xl leading-tight text-[var(--color-text-primary)] md:text-4xl"
-            style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
+            className="text-balance text-4xl leading-[1.05] text-[var(--color-text-primary)] md:text-5xl lg:text-6xl"
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontWeight: 600,
+              letterSpacing: '-0.03em',
+            }}
           >
             Questions, before you commit.
           </h2>
