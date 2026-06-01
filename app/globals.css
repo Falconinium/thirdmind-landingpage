@@ -182,10 +182,14 @@
 .brain-confetti {
   left: 0;
   top: 0;
+  opacity: 0;
   transform: translate(-50%, -50%) scale(0.3);
   animation-name: brain-confetti;
   animation-timing-function: cubic-bezier(0.34, 0.85, 0.5, 1);
-  animation-fill-mode: forwards;
+  /* `both` so the 0% keyframe (opacity: 0, scale 0.3) applies during the
+     pre-delay — otherwise the particles are rendered visible at their start
+     position until the animation begins. */
+  animation-fill-mode: both;
 }
 
 /* Soft gold shockwave that expands behind the confetti. */
@@ -207,6 +211,9 @@
   }
 }
 .brain-glow {
+  width: 0;
+  height: 0;
+  opacity: 0;
   border-radius: 9999px;
   background: radial-gradient(
     circle,
@@ -214,5 +221,5 @@
     rgba(201, 168, 76, 0.2) 45%,
     transparent 72%
   );
-  animation: brain-glow 0.7s ease-out forwards;
+  animation: brain-glow 0.7s ease-out both;
 }
