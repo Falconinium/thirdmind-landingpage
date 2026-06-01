@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { label: 'Features', href: '#features' },
   { label: 'How it works', href: '#how' },
   { label: 'FAQ', href: '#faq' },
+  { label: 'Download', href: '#download', cta: true },
 ]
 
 /**
@@ -62,19 +63,16 @@ export function SiteHeader() {
           </span>
         </Link>
 
-        {/* Center: sliding nav (hidden on narrow screens) */}
+        {/* Center: sliding nav with the Download CTA inlined as the last item.
+            Hidden on narrow screens; mobile falls back to the brand-only header
+            and the in-section download CTAs. */}
         <div className="hidden md:block">
           <SlidingNav items={NAV_ITEMS} />
         </div>
 
-        {/* Right: CTA */}
-        <Link
-          href="#download"
-          className="rounded-full bg-[var(--color-accent)] px-3.5 py-1.5 text-xs font-semibold text-black transition-all hover:bg-[var(--color-accent-hover)] hover:scale-[1.03]"
-          style={{ fontFamily: 'var(--font-mono)' }}
-        >
-          Download
-        </Link>
+        {/* Right: empty spacer matching the brand width so the nav stays
+            visually centered. Width tracks the logo + label. */}
+        <div className="hidden w-[120px] shrink-0 md:block" />
       </header>
     </div>
   )

@@ -10,6 +10,9 @@ interface BubbleRect {
 export interface NavItem {
   label: string
   href: string
+  /** When true the item renders as a gold CTA pill instead of a plain tab.
+   *  The sliding bubble skips it (CTAs always own their own style). */
+  cta?: boolean
 }
 
 /**
@@ -26,7 +29,18 @@ export function SlidingNav({ items }: { items: NavItem[] }) {
   const [bubble, setBubble] = useState<BubbleRect | null>(null)
   const [activeHref, setActiveHref] = useState<string>(items[0]?.href ?? '')
 
+  // CTA items aren't a bubble target — the gold pill is their own surface.
   function moveBubbleTo(href: string | null) {
+    const target = items.find((i) => i.href === href)
+    if (!href || target?.cta) {
+      // Snap back to the last *active* non-CTA href when hovering a CTA.
+      const fallback = items.find((i) => !i.cta && i.href === activeHref)
+      if (!fallback) {
+        setBubble(null)
+        return
+      }
+      href = fallback.href
+    }
     const el = href ? tabRefs.current[href] : null
     const nav = navRef.current
     if (!el || !nav) {
@@ -86,7 +100,23 @@ export function SlidingNav({ items }: { items: NavItem[] }) {
         />
       )}
       {items.map((item) => {
-        const active = item.href === activeHref
+        const active = item.href === activeHref && !item.cta
+        if (item.cta) {
+          return (
+            <a
+              key={item.href}
+              ref={(el) => {
+                tabRefs.current[item.href] = el
+              }}
+              href={item.href}
+              onMouseEnter={() => moveBubbleTo(item.href)}
+              className="relative z-10 rounded-lg bg-[var(--color-accent)] px-3.5 py-1.5 text-sm font-semibold text-black transition-all hover:bg-[var(--color-accent-hover)] hover:scale-[1.03]"
+              style={{ fontFamily: 'var(--font-mono)' }}
+            >
+              {item.label}
+            </a>
+          )
+        }
         return (
           <a
             key={item.href}
