@@ -90,7 +90,6 @@ export function ChannelMockup() {
             gradient:
               'linear-gradient(135deg, rgba(167,139,250,0.22), rgba(201,168,76,0.12))',
           }}
-          brains={9}
           align="right"
           loading={analyzing}
         />
@@ -159,7 +158,6 @@ function Message({
   time,
   message,
   embed,
-  brains,
   align = 'left',
   loading = false,
 }: {
@@ -178,7 +176,6 @@ function Message({
     icon: React.ComponentType<{ className?: string }>
     gradient?: string
   }
-  brains: number
   align?: 'left' | 'right'
   loading?: boolean
 }) {
@@ -306,13 +303,12 @@ function Message({
                 <div className="mx-1 mt-2 h-px bg-white/5" />
                 <div
                   className={
-                    'mt-1.5 flex items-center gap-1 text-[var(--color-accent)] ' +
+                    'mt-1.5 flex items-center gap-1 ' +
                     (reverse ? 'justify-start' : 'justify-end')
                   }
                   style={{ fontFamily: 'var(--font-mono)' }}
                 >
-                  <Brain className="h-3.5 w-3.5" />
-                  <span className="text-[10px]">{brains}</span>
+                  <Brain className="h-3.5 w-3.5 brain-click text-[var(--color-text-muted)]" />
                 </div>
               </div>
             )}
