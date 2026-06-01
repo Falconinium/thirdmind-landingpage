@@ -32,13 +32,18 @@ export function SiteHeader() {
     <div className="pointer-events-none sticky top-0 z-50 flex justify-center">
       <header
         className={
-          'pointer-events-auto mt-3 flex w-[min(100%-1.5rem,72rem)] items-center justify-between gap-4 rounded-2xl border border-white/5 px-3 transition-all duration-300 ease-out ' +
-          (scrolled ? 'h-12 backdrop-blur-md' : 'h-14')
+          'pointer-events-auto mt-3 flex w-[min(100%-1.5rem,72rem)] items-center justify-between gap-4 rounded-2xl px-3 transition-all duration-300 ease-out ' +
+          (scrolled
+            ? 'h-12 border border-white/5 backdrop-blur-md'
+            : 'h-14 border border-transparent')
         }
         style={{
+          // Transparent at rest so the page-top gold halo reads through the
+          // nav. Once the user scrolls, switch to an opaque smoked-glass look
+          // so text stays legible over the content below.
           background: scrolled
             ? 'linear-gradient(180deg, rgba(24,24,28,0.85), rgba(24,24,28,0.7))'
-            : 'linear-gradient(180deg, rgba(201,168,76,0.10) 0%, rgba(201,168,76,0.02) 55%, rgba(10,10,13,0.6) 100%)',
+            : 'transparent',
         }}
       >
         {/* Left: brand */}

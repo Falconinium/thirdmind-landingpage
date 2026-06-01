@@ -22,6 +22,18 @@ import { LATEST_VERSION, releaseUrl, REPO_README } from '@/lib/release'
 export default function Page() {
   return (
     <>
+      {/* Page-top gold halo. Lives at the very top of the document so it sits
+          BEHIND the floating header and reads as "light entering from above"
+          rather than glowing from under the nav. Pointer-events disabled so
+          it never interferes with clicks. */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[420px]"
+        style={{
+          background:
+            'radial-gradient(ellipse 80% 100% at 50% 0%, rgba(201,168,76,0.16) 0%, rgba(201,168,76,0.06) 35%, transparent 70%)',
+        }}
+      />
       <SiteHeader />
       <main className="flex-1">
         <Hero />
@@ -41,13 +53,7 @@ export default function Page() {
 function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div
-        className="pointer-events-none absolute inset-x-0 top-0 h-[640px]"
-        style={{
-          background:
-            'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.10), transparent 70%)',
-        }}
-      />
+      {/* Violet orb keeps drifting; gold halo lives at the page root now. */}
       <div
         className="pointer-events-none absolute -right-32 top-32 h-96 w-96 rounded-full opacity-60 blur-3xl"
         style={{
