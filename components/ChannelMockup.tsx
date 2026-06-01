@@ -208,7 +208,7 @@ function Message({
           className="relative mt-2 max-w-[420px] overflow-hidden rounded-xl border border-white/5 bg-[var(--color-background)]"
           // Reserved height so the card doesn't jump between the pending and
           // resolved states. Tall enough for the full AI summary + tags.
-          style={{ minHeight: 244 }}
+          style={{ minHeight: 320 }}
         >
           {loading && (
             <div

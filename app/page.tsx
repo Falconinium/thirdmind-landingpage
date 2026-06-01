@@ -135,6 +135,9 @@ function Hero() {
             style={{
               background:
                 'radial-gradient(ellipse 80% 60% at 50% 0%, rgba(167,139,250,0.10), transparent 60%), linear-gradient(180deg, rgba(24,24,28,0.7), rgba(10,10,13,0.9))',
+              // Reserve enough height so the outer card never resizes between
+              // the embed's pending and resolved states.
+              minHeight: 460,
             }}
           >
             <ChannelMockup />
