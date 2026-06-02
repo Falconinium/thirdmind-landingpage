@@ -7,7 +7,7 @@ import { SlidingNav } from './SlidingNav'
 const NAV_ITEMS = [
   { label: 'Features', href: '#features' },
   { label: 'How it works', href: '#how' },
-  { label: 'Download', href: '#download', cta: true },
+  { label: 'Join waitlist', href: '#waitlist', cta: true },
   { label: 'FAQ', href: '#faq' },
 ]
 

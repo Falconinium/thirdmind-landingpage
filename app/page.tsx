@@ -15,8 +15,8 @@ import { ChannelMockup } from '@/components/ChannelMockup'
 import { DigestPreview } from '@/components/DigestPreview'
 import { SiteHeader } from '@/components/SiteHeader'
 import { Reveal } from '@/components/Reveal'
-import { AppleLogo, WindowsLogo } from '@/components/BrandIcons'
-import { LATEST_VERSION, releaseUrl, REPO_README } from '@/lib/release'
+import { WaitlistForm } from '@/components/WaitlistForm'
+import { LATEST_VERSION, REPO_README } from '@/lib/release'
 
 export default function Page() {
   return (
@@ -39,7 +39,7 @@ export default function Page() {
         <Idea />
         <Features />
         <HowItWorks />
-        <Download />
+        <Waitlist />
         <FAQ />
       </main>
       <SiteFooter />
@@ -108,8 +108,8 @@ function Hero() {
             .
           </p>
           <div className="mt-9 flex flex-wrap items-center justify-center gap-3">
-            <CTAButton href="#download" primary>
-              Download for free
+            <CTAButton href="#waitlist" primary>
+              Join the waitlist
               <ArrowRight className="h-4 w-4" />
             </CTAButton>
             <CTAButton href="#how">
@@ -121,7 +121,7 @@ function Hero() {
             className="mt-7 text-[10px] uppercase tracking-[0.2em] text-[var(--color-text-muted)]"
             style={{ fontFamily: 'var(--font-mono)' }}
           >
-            macOS · Windows · Invitation-only
+            Private beta · macOS &amp; Windows · By invitation
           </p>
         </Reveal>
       </div>
@@ -504,18 +504,17 @@ function Step({
   )
 }
 
-/* ───────────────────────────── Download ───────────────────────────── */
+/* ───────────────────────────── Waitlist ───────────────────────────── */
 
-function Download() {
-  const url = releaseUrl()
+function Waitlist() {
   return (
-    <section id="download">
+    <section id="waitlist">
       <Reveal className="mx-auto max-w-3xl px-6 py-32 text-center">
         <p
           className="mb-4 text-[10px] uppercase tracking-[0.22em] text-[var(--color-accent)]"
           style={{ fontFamily: 'var(--font-mono)' }}
         >
-          Download · v{LATEST_VERSION}
+          Waitlist
         </p>
         <h2
           className="text-balance text-4xl leading-[1.05] text-[var(--color-text-primary)] md:text-5xl lg:text-6xl"
@@ -525,89 +524,17 @@ function Download() {
             letterSpacing: '-0.03em',
           }}
         >
-          Get the desktop app.
+          Be first through the door.
         </h2>
         <p className="mt-4 text-base leading-relaxed text-[var(--color-text-muted)]">
-          Free during the private beta. Auto-updates on Windows. The release
-          page has a step-by-step guide for macOS Gatekeeper and Windows
-          SmartScreen.
+          Third Mind is in private beta and invitation-only. Leave your email
+          and we&apos;ll send your invite the moment a seat opens for your
+          circle.
         </p>
 
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <DownloadCard
-            icon={AppleLogo}
-            os="macOS"
-            note="Apple Silicon or Intel · .dmg"
-            href={url}
-          />
-          <DownloadCard
-            icon={WindowsLogo}
-            os="Windows"
-            note="10 / 11 · .exe installer"
-            href={url}
-          />
-        </div>
-
-        <a
-          href={url}
-          target="_blank"
-          rel="noreferrer"
-          className="mt-8 inline-flex items-center gap-2 text-sm text-[var(--color-text-muted)] hover:text-[var(--color-accent)]"
-        >
-          <ArrowRight className="h-4 w-4" />
-          See full release notes on GitHub
-        </a>
+        <WaitlistForm />
       </Reveal>
     </section>
-  )
-}
-
-function DownloadCard({
-  icon: Icon,
-  os,
-  note,
-  href,
-}: {
-  icon: React.ComponentType<{
-    className?: string
-    style?: React.CSSProperties
-  }>
-  os: string
-  note: string
-  href: string
-}) {
-  return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noreferrer"
-      className="group flex items-center gap-4 rounded-2xl border border-white/5 bg-white/[0.02] p-5 text-left transition-colors hover:border-[var(--color-accent)]/40 hover:bg-white/[0.04]"
-    >
-      <div
-        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl"
-        style={{
-          background:
-            'color-mix(in srgb, var(--color-accent) 14%, transparent)',
-        }}
-      >
-        <Icon className="h-6 w-6" style={{ color: 'var(--color-accent)' }} />
-      </div>
-      <div className="flex-1">
-        <p
-          className="text-sm text-[var(--color-text-primary)]"
-          style={{ fontFamily: 'var(--font-display)', fontWeight: 600 }}
-        >
-          Download for {os}
-        </p>
-        <p
-          className="text-xs text-[var(--color-text-muted)]"
-          style={{ fontFamily: 'var(--font-mono)' }}
-        >
-          {note}
-        </p>
-      </div>
-      <ArrowRight className="h-4 w-4 text-[var(--color-text-muted)] transition-transform group-hover:translate-x-0.5 group-hover:text-[var(--color-accent)]" />
-    </a>
   )
 }
 
@@ -623,8 +550,8 @@ const FAQS = [
     a: "Free during the private beta. We'll share pricing before that changes — never as a surprise.",
   },
   {
-    q: 'First launch on macOS — what to expect.',
-    a: "macOS will ask you to approve the app on first launch. It's a 10-second click-through; the release page walks you through it.",
+    q: 'How do I get in?',
+    a: "Join the waitlist with your email. We're onboarding circles in small waves during the private beta — we'll email your invite the moment a seat opens. It runs on macOS and Windows.",
   },
   {
     q: 'Where is data stored?',
