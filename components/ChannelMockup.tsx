@@ -1,45 +1,109 @@
 'use client'
 
-import { ExternalLink, Sparkles, Play, Brain } from 'lucide-react'
+import { ExternalLink, Sparkles, Play, Brain, Link2, ArrowUp } from 'lucide-react'
 import { useEffect, useState, type CSSProperties } from 'react'
 
+const SHARED_LINK = 'https://youtube.com/watch?v=Karpathy-tokenization'
+
 /**
- * Hero mock-up: a Third Mind channel with three messages — including one that
- * cycles between "AI is analyzing" and the resolved embed, so visitors see the
- * AI moment itself, not just the result.
+ * The animation cycles through four phases so visitors watch the whole loop —
+ * someone pasting a link, sending it, then the AI taking over:
+ *   typing    → the link types itself into the composer
+ *   sending   → send button pops, message slides into the channel
+ *   analyzing → the card shows "AI is analyzing" (2.4s)
+ *   done      → the AI summary resolves + brain confetti (5s)
+ * then it resets to `typing` and starts over.
+ */
+type Phase = 'typing' | 'sending' | 'analyzing' | 'done'
+
+/**
+ * Hero mock-up: a Third Mind channel with a composer at the bottom. A link is
+ * "typed" and "sent", which spawns the message card and triggers the AI
+ * moment itself, not just the result.
  */
 export function ChannelMockup() {
-  // Karpathy embed loops: pending (~2.4s) → done (~5.4s) → restart.
-  // `doneCycle` increments every time we land on 'done', so we can key the
-  // brain reaction wrapper to force a fresh confetti burst per cycle.
-  const [analyzing, setAnalyzing] = useState(true)
+  const [phase, setPhase] = useState<Phase>('typing')
+  // Number of characters of SHARED_LINK currently "typed" into the composer.
+  const [typed, setTyped] = useState(0)
+  // Increments each time we land on 'done' so the brain reaction remounts and
+  // fires a fresh confetti burst per cycle.
   const [doneCycle, setDoneCycle] = useState(0)
+  // Increments when a link is sent, so the "+10 XP" toast remounts and replays
+  // its pop-in animation once per share.
+  const [sendCycle, setSendCycle] = useState(0)
+  // The XP toast is only mounted for the length of its animation (2.2s), so it
+  // arrives and leaves cleanly instead of lingering in its faded-out end state.
+  const [xpVisible, setXpVisible] = useState(false)
 
+  // Drive the typing effect while in the `typing` phase, then advance phases.
   useEffect(() => {
     let cancelled = false
-    let timer = 0
-    let isPending = true
-
-    function schedule(ms: number) {
-      timer = window.setTimeout(() => {
-        if (cancelled) return
-        isPending = !isPending
-        setAnalyzing(isPending)
-        if (!isPending) setDoneCycle((c) => c + 1)
-        // Pending lasts 2.4s; done lasts 5s so the viewer can read it.
-        schedule(isPending ? 2400 : 5000)
+    const timers: number[] = []
+    const wait = (ms: number, fn: () => void) => {
+      const id = window.setTimeout(() => {
+        if (!cancelled) fn()
       }, ms)
+      timers.push(id)
     }
-    // Initial wait, then flip to 'done' first.
-    schedule(2400)
+
+    if (phase === 'typing') {
+      if (typed < SHARED_LINK.length) {
+        // Slight jitter so it reads like real typing, not a metronome.
+        wait(28 + Math.random() * 45, () => setTyped((n) => n + 1))
+      } else {
+        // Whole link is in the field — hold a beat, then "send".
+        wait(550, () => {
+          setSendCycle((c) => c + 1)
+          setXpVisible(true)
+          setPhase('sending')
+        })
+      }
+    } else if (phase === 'sending') {
+      // Button pop + message slide-in play, then the card starts analyzing.
+      wait(420, () => setPhase('analyzing'))
+    } else if (phase === 'analyzing') {
+      wait(2400, () => {
+        setDoneCycle((c) => c + 1)
+        setPhase('done')
+      })
+    } else if (phase === 'done') {
+      // Let the viewer read the summary, then reset the whole loop.
+      wait(5000, () => {
+        setTyped(0)
+        setPhase('typing')
+      })
+    }
+
     return () => {
       cancelled = true
-      window.clearTimeout(timer)
+      timers.forEach((id) => window.clearTimeout(id))
     }
-  }, [])
+  }, [phase, typed])
+
+  // Unmount the XP toast once its 2.2s pop-in → hold → sink-out has played.
+  useEffect(() => {
+    if (!xpVisible) return
+    const id = window.setTimeout(() => setXpVisible(false), 2200)
+    return () => window.clearTimeout(id)
+  }, [xpVisible, sendCycle])
+
+  // The message card only exists once the link has been "sent". It shows the
+  // "AI is analyzing" state from the moment it appears (sending) through the
+  // analyzing phase, so the resolved summary never flashes before its time.
+  const showMessage = phase !== 'typing'
+  const analyzing = phase === 'sending' || phase === 'analyzing'
+  const readyToSend = phase === 'typing' && typed >= SHARED_LINK.length
 
   return (
     <div className="relative w-full">
+      {/* "+10 XP" toast — fires when the link is shared, mirroring the desktop
+          app's reward for sharing a resource with a link (+10 to the sharer). */}
+      {xpVisible && (
+        <div className="pointer-events-none absolute left-1/2 top-0 z-30 -translate-x-1/2 -translate-y-1/2">
+          <XpToast key={sendCycle} amount={10} />
+        </div>
+      )}
+
       {/* Day separator */}
       <div className="mb-5 flex items-center gap-4">
         <div
@@ -78,29 +142,110 @@ export function ChannelMockup() {
         }
       />
 
-      <div className="mt-4">
-        <Message
-          name="Maxime"
-          tint={{ bg: 'rgba(63,182,122,0.18)', text: '#6dd6a0' }}
-          level={3}
-          time="10:24"
-          embed={{
-            type: 'Video',
-            domain: 'youtube.com',
-            title: 'Andrej Karpathy — Deep Dive on Tokenization',
-            summary:
-              'Two hours dissecting BPE, byte-level vs unicode tradeoffs, and why most LLM bugs trace back to how you split text.',
-            tags: ['AI', 'Research'],
-            stars: 5,
-            icon: Play,
-            gradient:
-              'linear-gradient(135deg, rgba(167,139,250,0.22), rgba(201,168,76,0.12))',
-          }}
-          align="right"
-          loading={analyzing}
-          burstKey={doneCycle}
-        />
+      {/* Reserve the message's vertical space so the composer doesn't jump up
+          and down between loops; the card fades into this slot. */}
+      <div className="mt-4" style={{ minHeight: 372 }}>
+        {showMessage && (
+          <div className="msg-send-in">
+            <Message
+              name="Maxime"
+              tint={{ bg: 'rgba(63,182,122,0.18)', text: '#6dd6a0' }}
+              level={3}
+              time="10:24"
+              embed={{
+                type: 'Video',
+                domain: 'youtube.com',
+                title: 'Andrej Karpathy — Deep Dive on Tokenization',
+                summary:
+                  'Two hours dissecting BPE, byte-level vs unicode tradeoffs, and why most LLM bugs trace back to how you split text.',
+                tags: ['AI', 'Research'],
+                stars: 5,
+                icon: Play,
+                gradient:
+                  'linear-gradient(135deg, rgba(167,139,250,0.22), rgba(201,168,76,0.12))',
+              }}
+              align="right"
+              loading={analyzing}
+              burstKey={doneCycle}
+            />
+          </div>
+        )}
       </div>
+
+      <Composer
+        // Clear the field the moment the link is sent — only show text while typing.
+        value={phase === 'typing' ? SHARED_LINK.slice(0, typed) : ''}
+        typing={phase === 'typing' && typed < SHARED_LINK.length}
+        ready={readyToSend}
+        sending={phase === 'sending'}
+      />
+    </div>
+  )
+}
+
+/**
+ * The message composer at the bottom of the channel — a link field with a
+ * paste hint and a send button. Purely a visual: the value is fed by the
+ * parent's typing loop; nothing here is interactive.
+ */
+function Composer({
+  value,
+  typing,
+  ready,
+  sending,
+}: {
+  value: string
+  typing: boolean
+  ready: boolean
+  sending: boolean
+}) {
+  const empty = value.length === 0
+  return (
+    <div className="mt-5 flex items-center gap-2 rounded-xl border border-white/8 bg-[var(--color-surface)] px-3 py-2">
+      <Link2 className="h-4 w-4 shrink-0 text-[var(--color-text-muted)]" />
+      <div className="min-w-0 flex-1 truncate text-xs">
+        {empty ? (
+          <span className="text-[var(--color-text-muted)]">
+            Paste a link to share…
+          </span>
+        ) : (
+          <span className="text-[var(--color-text-primary)]">
+            <span style={{ fontFamily: 'var(--font-mono)' }}>{value}</span>
+            {typing && <span className="composer-caret" />}
+          </span>
+        )}
+      </div>
+      <button
+        type="button"
+        aria-hidden
+        tabIndex={-1}
+        className={
+          (ready || sending ? 'send-pop ' : '') +
+          'flex h-7 w-7 shrink-0 items-center justify-center rounded-lg transition-colors duration-200 ' +
+          (ready || sending
+            ? 'bg-[var(--color-accent)] text-black'
+            : 'bg-white/[0.04] text-[var(--color-text-muted)]')
+        }
+      >
+        <ArrowUp className="h-4 w-4" />
+      </button>
+    </div>
+  )
+}
+
+/**
+ * "+N XP" gain toast — a gold pill with a sparkle, ported from the desktop
+ * app's XpToasts. Self-animates (pop in → hold → sink out) over 2.2s; the
+ * parent remounts it via `key` to replay it once per share.
+ */
+function XpToast({ amount }: { amount: number }) {
+  return (
+    <div
+      className="xp-toast flex items-center gap-2 rounded-full border border-[var(--color-accent)]/40 bg-[var(--color-accent)]/15 px-3.5 py-2 text-sm text-[var(--color-accent)] shadow-[0_8px_24px_-12px_rgba(201,168,76,0.6)] backdrop-blur"
+      style={{ fontFamily: 'var(--font-mono)' }}
+    >
+      <Sparkles className="h-4 w-4" />
+      <span className="font-semibold">+{amount} XP</span>
     </div>
   )
 }
